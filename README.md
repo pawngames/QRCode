@@ -13,3 +13,6 @@
 <p> - Version and error type information
 <p> - Error calculation
 <p> - Data Masking
+
+<p>More Projects:
+<p>https://www.youtube.com/channel/UCzOosYAnqocoLkZC0XeGFMA
