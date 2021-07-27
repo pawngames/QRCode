@@ -7,6 +7,7 @@ https://www.thonky.com/qr-code-tutorial
 Good read for everyone who wants to know more about QRCodes
 Steps so far (only encompasses V1):
  - Finder Patterns
+ - Data analysis and type definition
  - Data encoding
 Next:
  - Version and error type information
