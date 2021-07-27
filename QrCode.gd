@@ -41,10 +41,10 @@ func _ready():
 
 func generate_qrcode(data:String, size:int):
 	var mode:int = _evaluate_mode(data)
-	_create_texture(size, data)
+	_create_texture(size, data, mode)
 	pass
 
-func _create_texture(size:int, data:String):
+func _create_texture(size:int, data:String, mode:int):
 	var _image:Image = Image.new()
 	var _image_final:Image = Image.new()
 	_image.create(size, size, false, Image.FORMAT_RGB8)
@@ -56,8 +56,8 @@ func _create_texture(size:int, data:String):
 	for x in range(size):
 		for y in range(size):
 			_image.set_pixel(x, y, Color.white)
-	_write_mode(_image, MODE.BYTE)
-	_write_msg(_image, data)
+	_write_mode(_image, mode)
+	_write_msg(_image, data, mode)
 	_apply_mask(_image, 0)
 	_place_markers(_image)
 	
@@ -85,7 +85,7 @@ func _write_mode(_image:Image, mode:int):
 	)
 	pass
 
-func _write_msg(_image:Image, msg:String):
+func _write_msg(_image:Image, msg:String, mode:int):
 	#Message Size
 	_write_value_v(
 		_image, 
@@ -113,14 +113,17 @@ func _write_msg(_image:Image, msg:String):
 		[Vector2(_image.get_width() - 10, _image.get_height() - 19), DIR.UP],
 		[Vector2(_image.get_width() - 12, _image.get_height() - 21), DIR.LEFT],
 		[Vector2(_image.get_width() - 12, _image.get_height() - 19), DIR.DOWN],
-		
 	]
 	#Encoding Message
 	#Each _write function creates a image area
 	#based on the direction as V1 specs require
-	var size = min(positions.size(), msg.length() - 1)
+	var size = min(positions.size() + 1, msg.length())
 	for i in range(size):
-		var data:int = msg.to_utf8()[i]
+		var data:int = 0
+		if mode == MODE.NUMERIC:
+			data = int(msg.substr(i, 1))
+		else:
+			data = msg.to_utf8()[i]
 		print(data)
 		match positions[i][1]:
 			DIR.UP:
@@ -160,7 +163,6 @@ func _to_bit_array(value:int)->Array:
 			arr.append(1)
 		else:
 			arr.append(0)
-	print(arr)
 	return arr
 	
 
